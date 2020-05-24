@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta 
 import pyglet
 from pyglet.window import key
 from . import physicalobject, resources
@@ -13,6 +14,11 @@ class Monster(physicalobject.PhysicalObject):
         self.counter = 0
         self.change_at = randint(50,100)
         self.randomize()
+        self.health = 10
+        self.didgethit = False
+        self.lasthit = None
+        self.nexthit = None
+        
 
     def update(self, dt):
         # Do all the normal physics stuff
@@ -28,17 +34,17 @@ class Monster(physicalobject.PhysicalObject):
             self.randomize()
 
     def randomize(self):
-        self.velocity_x = randint(100, 300)
-        self.velocity_y = randint(100, 300)
+        self.velocity_x = randint(20, 130)
+        self.velocity_y = randint(20, 130)
         
         # This expression means: there is a 50%
         # chance we will change our horizontal direction.
-        if randint(0, 100) > 50:
+        if randint(0, 100) > 20:
             self.velocity_x *= -1
             
         # This expression means: there is a 50%
         # chance we will change our vertical direction.
-        if randint(0, 100) > 50:
+        if randint(0, 100) > 20:
             self.velocity_y *= -1        
 
     def delete(self):
@@ -47,4 +53,14 @@ class Monster(physicalobject.PhysicalObject):
         super().delete()
 
     def handle_collision_with(self, other_object):
-        self.dead = True
+        self.dead = False
+        current_time = datetime.now()
+        if (not self.lasthit) or (current_time > self.nexthit):
+            # print(current_time > self.nexthit)
+            self.nexthit = current_time + timedelta(seconds=5)
+            self.lasthit = current_time
+            self.didgethit = True
+            self.health -= 1
+            if self.health == 0:
+                self.dead = True
+                # print('hello hello')

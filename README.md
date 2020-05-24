@@ -1,4 +1,6 @@
 
+THIS README CONTAINS INSTRUCTIONS FOR DEVELOPING A SIMPLE PYGLET GAME.
+
 # Setup
 
 First, you'll need to install the `pyglet` library so that `python3` can use it.
